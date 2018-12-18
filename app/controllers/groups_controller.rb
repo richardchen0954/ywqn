@@ -2,12 +2,12 @@ class GroupsController < ApplicationController
   before_action :authenticate_user! , only: [:new, :create, :edit, :update, :destroy]
   before_action :find_group_and_check_permission, only: [:edit, :update, :destroy]
   def index
-    @groups = Group.all
+    @groups = Group.all.order("id DESC").paginate(:page => params[:page], :per_page => 5)
   end
 
   def show
     @group = Group.find(params[:id])
-    @posts = @group.posts.order("id DESC")
+    @posts = @group.posts.order("id DESC").paginate(:page => params[:page], :per_page => 5)
   end
 
   def edit
