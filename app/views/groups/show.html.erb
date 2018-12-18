@@ -14,7 +14,7 @@
   <% @posts.each do |post| %>
 
   <div id="post-<%= post.id %>" class="panel panel-default">
-    <div class="panel-heading"><%= post.user.display_name %></div>
+    <div class="panel-heading"><%= post.user.display_name %><div style="float:right"><%= post.created_at %></div></div>
     <div class="panel-body">
       <%= post.content %>
 
