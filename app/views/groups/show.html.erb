@@ -1,44 +1,28 @@
 <div class="col-md-12">
   <div class="group">
 
-  <%= link_to("Write a Post", new_group_post_path(@group), class: "btn btn-default pull-right")%>
-
     <% if current_user && current_user == @group.user %>
-    <%= link_to("Edit", edit_group_path(@group), class: "btn btn-primary pull-right")%>
+    <%= link_to("改", edit_group_path(@group), class: "btn btn-primary pull-right")%>
     <% end %>
 
   </div>
   <h2><%= @group.title %></h2>
-  <p><%= @group.description %></p>
+  <p><%= simple_format(@group.description) %></p>
 
+   <%= form_for [@group,Post.new] , :remote => true do |f| %>
+     <div class="form-group">
+       <%= f.text_area :content, placeholder: "点我写评论", :class => "form-control" %>
+     </div>
+     <div class="form-group">
+       <%= f.submit "评", :class => "btn btn-primary" %>
+     </div>
+   <% end %>
+   <div id="post-list">
   <% @posts.each do |post| %>
-
-  <div id="post-<%= post.id %>" class="panel panel-default">
-    <div class="panel-heading"><%= post.user.display_name %><div style="float:right"><%= time_ago_in_words post.created_at %></div></div>
-    <div class="panel-body">
-      <span id="post-thumbsup-<%= post.id %>" class="label label-success"><%= post.likes.count %> 👍</span>
-      <%= post.content %>
-          <div class="text-right">
-
-            <% if post.liked_users.any? %>
-              <%= post.liked_users.map{ |u| u.display_name }.join(",") %> 点了赞
-            <% end %>
-
-            <% if current_user # 有登入才可以按讚 %>
-              <% if post.find_like(current_user) %>
-                <%= link_to "-1", unlike_group_post_path(post), :method => :post, :remote => true,  :class => "btn btn-primary" %>
-              <% else %>
-                <%= link_to "+1", like_group_post_path(post), :method => :post, :remote => true,  :class => "btn btn-primary" %>
-              <% end %>
-            <% end %>
-      <% if current_user && post.user == current_user %>
-        <%= link_to "Delete", group_post_path(post), :method => :delete, :remote => true, :class => "btn btn-danger" %>
-      <% end %>
-      </div>
-    </div>
+  <%= render :partial => post, :locals => { :post => post } %>
+  <% end %>
   </div>
 
-  <% end %>
       <div class="text-center">
         <%= will_paginate @posts %>
       </div>

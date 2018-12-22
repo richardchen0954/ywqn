@@ -2,12 +2,12 @@ class GroupsController < ApplicationController
   before_action :authenticate_user! , only: [:new, :create, :edit, :update, :destroy]
   before_action :find_group_and_check_permission, only: [:edit, :update, :destroy]
   def index
-    @groups = Group.all.order("id DESC").paginate(:page => params[:page], :per_page => 5)
+    @groups = Group.all.order("id DESC").paginate(:page => params[:page], :per_page => 20)
   end
 
   def show
     @group = Group.find(params[:id])
-    @posts = @group.posts.order("id DESC").paginate(:page => params[:page], :per_page => 5)
+    @posts = @group.posts.order("id DESC").paginate(:page => params[:page], :per_page => 10)
   end
 
   def edit
@@ -16,7 +16,7 @@ class GroupsController < ApplicationController
   def update
 
   if @group.update(group_params)
-    redirect_to groups_path, notice: "Update Success"
+    redirect_to groups_path, notice: "改好咯～"
   else
     render :edit
   end
@@ -24,7 +24,7 @@ class GroupsController < ApplicationController
 
     def destroy
       @group.destroy
-      flash[:alert] = "Group deleted"
+      flash[:alert] = "删掉咯～"
       redirect_to groups_path
     end
 
